@@ -4,17 +4,26 @@ Visit the project in http://code.google.com/p/python-project-utils/
 """
 
 import unittest
-import active_record
-from test import mock
+import active_record.util
 
 class PropertyAttacherTestCase(unittest.TestCase):
 	def test_type_safe_attach_property(self):
-		active_record.util.PropertyAttacher.attach_property(mock.DummyClass, "property", int)
-		dummy_object = mock.DummyClass()
+		class DummyClass(object):
+			pass
+
+		active_record.util.PropertyAttacher.attach_property(DummyClass, "property", int)
+		dummy_object = DummyClass()
 
 		self.assertEqual(dummy_object.property, None)
 
-		self.assertRaises(TypeError, dummy_object.property, "some string")
+		success = False
+
+		try:
+			dummy_object.property = "some string"
+		except TypeError:
+			success = True
+
+		self.assertTrue(success)
 
 		dummy_object.property = 5
 
@@ -25,8 +34,11 @@ class PropertyAttacherTestCase(unittest.TestCase):
 		self.assertEqual(dummy_object.property, None)
 
 	def test_non_type_safe_attach_property(self):
-		active_record.util.PropertyAttacher.attach_property(mock.DummyClass, "property")
-		dummy_object = mock.DummyClass()
+		class DummyClass(object):
+			pass
+
+		active_record.util.PropertyAttacher.attach_property(DummyClass, "property")
+		dummy_object = DummyClass()
 
 		self.assertEqual(dummy_object.property, None)
 

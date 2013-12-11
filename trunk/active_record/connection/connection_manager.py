@@ -18,6 +18,6 @@ class ConnectionManager(object):
 	@connector.setter
 	def connector(self, connector):
 		if not isinstance(connector, IConnector):
-			raise ValueError("connector must extends IConnector")
+			raise TypeError("connector must extends IConnector")
 
 		self._connector = connector
