@@ -12,5 +12,5 @@ class ActiveRecordInitializer:
 	def initialize(cls, table_name):
 		setattr(cls, "table_name", decorator.class_property(classmethod(lambda cls: table_name)))
 
-#		for column_name, column_type in connection.ConnectionManager.instance.connector.get_table_columns(table_name):
-#			PropertyAttacher.attach_property(cls, column_name, column_type)
+		for column_name, column_type in connection.ConnectionManager.instance.connector.get_table_columns(table_name):
+			PropertyAttacher.attach_property(cls, column_name, column_type)

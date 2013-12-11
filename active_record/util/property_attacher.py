@@ -19,7 +19,7 @@ class PropertyAttacher:
 
 		def type_safe_set_attribute_value(self, property_value):
 			if type(property_value) is not property_type:
-				raise TypeError("Wrong value type for {0}. Expected {1}, got {2}.".format(property_name, property_type, type(value)))
+				raise TypeError("Wrong value type for {0}. Expected {1}, got {2}.".format(property_name, property_type, type(property_value)))
 
 			setattr(self, attribute, property_value)
 

@@ -4,7 +4,7 @@ Visit the project in http://code.google.com/p/python-project-utils/
 """
 
 import unittest
-import active_record
+import active_record.decorator
 
 class SingletonTestCase(unittest.TestCase):
 	def test_singleton(self):
