@@ -4,7 +4,7 @@ Visit the project in http://code.google.com/p/python-project-utils/
 """
 
 from .. import decorator
-from connector import IConnector
+from .. import interface
 
 @decorator.singleton
 class ConnectionManager(object):
@@ -17,7 +17,7 @@ class ConnectionManager(object):
 
 	@connector.setter
 	def connector(self, connector):
-		if not isinstance(connector, IConnector):
-			raise TypeError("connector must extends IConnector")
+		if not isinstance(connector, interface.IConnector):
+			raise TypeError("connector must be a subclass of IConnector")
 
 		self._connector = connector

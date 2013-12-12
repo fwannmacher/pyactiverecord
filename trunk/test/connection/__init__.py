@@ -4,4 +4,3 @@ Visit the project in http://code.google.com/p/python-project-utils/
 """
 
 from connection_manager_test import *
-from connector_test import *
