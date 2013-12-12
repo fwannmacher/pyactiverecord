@@ -6,10 +6,14 @@ Visit the project in http://code.google.com/p/python-project-utils/
 from property_attacher import PropertyAttacher
 from .. import decorator
 from .. import connection
+from .. import interface
 
 class ActiveRecordInitializer:
 	@staticmethod
 	def initialize(cls, table_name):
+		if not issubclass(cls, interface.IActiveRecord):
+			raise TypeError("cls must be a subclass of IActiveRecord")
+
 		setattr(cls, "table_name", decorator.class_property(classmethod(lambda cls: table_name)))
 
 		for column_name, column_type in connection.ConnectionManager.instance.connector.get_table_columns(table_name):

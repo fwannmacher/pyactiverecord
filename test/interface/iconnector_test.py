@@ -4,11 +4,11 @@ Visit the project in http://code.google.com/p/python-project-utils/
 """
 
 import unittest
-import active_record.connection
+import active_record.interface
 
 class IConnectorTestCase(unittest.TestCase):
 	def test_get_table_columns(self):
-		connector = active_record.connection.IConnector()
+		connector = active_record.interface.IConnector()
 		success = False
 
 		try:
