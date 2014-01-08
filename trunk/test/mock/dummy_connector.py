@@ -6,5 +6,8 @@ Visit the project in http://code.google.com/p/python-project-utils/
 import active_record.interface
 
 class DummyConnector(active_record.interface.IConnector):
+	def table_exists(self, table_name):
+		return True
+
 	def get_table_columns(self, table_name):
 		return [("integer", int)]

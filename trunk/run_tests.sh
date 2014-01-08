@@ -1,4 +1,3 @@
 #!/bin/bash
 
-coverage run -m unittest discover -v test "*_test_case.py"
-coverage html
+nosetests -v --with-coverage --cover-erase --cover-package=active_record --cover-html
