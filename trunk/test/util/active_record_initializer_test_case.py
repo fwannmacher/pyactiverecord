@@ -8,7 +8,7 @@ from test import mock
 import active_record.connection
 active_record.connection.ConnectionManager.instance.connector = mock.DummyConnector()
 import active_record.util
-import active_record.interface
+import active_record.base
 
 class ActiveRecordInitializerTestCase(unittest.TestCase):
 	def test_type_error_initialize(self):
@@ -22,13 +22,13 @@ class ActiveRecordInitializerTestCase(unittest.TestCase):
 		self.assertTrue(success)
 
 	def test_initialize(self):
-		class DummyClass(active_record.interface.IActiveRecord):
+		class DummyClass(active_record.base.ActiveRecord):
 			pass
-
-		active_record.util.ActiveRecordInitializer.initialize(DummyClass, "dummy_classes")
 
 		self.assertEqual(DummyClass.table_name, "dummy_classes")
 
-		dummy_object = DummyClass()
+		dummy_object = DummyClass(integer=150)
 
 		self.assertTrue(hasattr(dummy_object, "integer"))
+
+		self.assertEqual(dummy_object.integer, 150)
