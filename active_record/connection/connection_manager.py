@@ -4,7 +4,7 @@ Visit the project in http://code.google.com/p/python-project-utils/
 """
 
 import utilities.design_pattern.singleton
-from .. import interface
+from i_connector import IConnector
 
 class ConnectionManager(utilities.design_pattern.singleton.Singleton):
 	def __init__(self):
@@ -16,7 +16,7 @@ class ConnectionManager(utilities.design_pattern.singleton.Singleton):
 
 	@connector.setter
 	def connector(self, connector):
-		if not isinstance(connector, interface.IConnector):
-			raise TypeError("connector must be a subclass of IConnector")
+		if not isinstance(connector, IConnector):
+			raise TypeError("connector must be a subclass of active_record.connection.IConnector")
 
 		self._connector = connector
