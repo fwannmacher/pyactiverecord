@@ -8,6 +8,10 @@ import abc
 class IConnector(object):
 	__metaclass__ = abc.ABCMeta
 
+	@abc.abstractproperty
+	def operations(self):
+		"""Gets the connector operations."""
+
 	@abc.abstractmethod
 	def table_exists(self, table_name):
 		"""Verifies if table exists in the database."""
@@ -15,3 +19,19 @@ class IConnector(object):
 	@abc.abstractmethod
 	def get_table_columns(self, table_name):
 		"""Gets the table columns from the database."""
+
+	@abc.abstractmethod
+	def get_table_primary_key(self, table_name):
+		"""Gets the table primary key from the database."""
+
+	@abc.abstractmethod
+	def table_record_exists(self, table_name, criteria):
+		"""Verifies if a record with the criteria exists in the table."""
+
+	@abc.abstractmethod
+	def get_table_records(self, table_name, criteria = None, limit = None, order_by = None, columns = None):
+		"""Verifies if a record with the criteria exists in the table."""
+
+	@abc.abstractmethod
+	def execute_table_operation(self, table_name, operation, column):
+		"""Executes the value for the operation over the given table column."""

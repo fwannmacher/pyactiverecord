@@ -7,3 +7,7 @@ from active_record_metaclass import ActiveRecordMetaclass
 
 class ActiveRecord(object):
 	__metaclass__ = ActiveRecordMetaclass
+
+	@classmethod
+	def find(cls, value, primary_key = "id"):
+		return None

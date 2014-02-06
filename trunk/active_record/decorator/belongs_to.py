@@ -7,7 +7,7 @@ import utilities.reflection.util
 import utilities.string
 import active_record.base
 
-def belongs_to(owner, owner_as = None, owner_foreign_key = None):
+def belongs_to(owner, owner_as = None, foreign_key = None):
 	def decorator(belonger):
 		if not issubclass(belonger, active_record.base.ActiveRecord):
 			raise TypeError("belonger must be a subclass of active_record.base.ActiveRecord")
@@ -16,7 +16,11 @@ def belongs_to(owner, owner_as = None, owner_foreign_key = None):
 			raise TypeError("owner must be a subclass of active_record.base.ActiveRecord")
 
 		property_name = utilities.string.CaseConverter.convert_to_snake_case(owner_as if owner_as is not None else owner.__name__)
-		utilities.reflection.util.PropertyAttacher.attach_property(belonger, property_name, owner)
+
+		def get_owner(self):
+			return owner.find(getattr(self, foreign_key if foreign_key is not None else property_name + "_id"))
+
+		utilities.reflection.util.PropertyAttacher.attach_property(belonger, property_name, owner, get_owner)
 
 		return belonger
 
