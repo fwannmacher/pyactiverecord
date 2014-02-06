@@ -16,7 +16,8 @@ class ActiveRecordInitializer:
 		connector = connection.ConnectionManager.instance.connector
 
 		if connector.table_exists(table_name):
+			setattr(cls.__metaclass__, "primary_key", property(lambda cls: connector.get_table_primary_key(table_name)))
 			setattr(cls.__metaclass__, "table_name", property(lambda cls: table_name))
 
-			for column_name, column_type in connector.get_table_columns(table_name):
+			for column_name, column_type in connector.get_table_columns(table_name).items():
 				utilities.reflection.util.PropertyAttacher.attach_property(cls, column_name, column_type)

@@ -27,6 +27,8 @@ class ActiveRecordInitializerTestCase(unittest.TestCase):
 
 		self.assertEqual(DummyClass.table_name, "dummy_classes")
 
+		self.assertEqual(DummyClass.primary_key, "id")
+
 		dummy_object = DummyClass(integer=150)
 
 		self.assertTrue(hasattr(dummy_object, "integer"))
