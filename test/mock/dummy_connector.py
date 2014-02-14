@@ -22,8 +22,8 @@ class DummyConnector(active_record.connection.IConnector):
 	def table_record_exists(self, table_name, criteria):
 		return True
 
-	def get_table_records(self, table_name, criteria = None, limit = None, order_by = None, columns = None):
-		return []
-
-	def execute_table_operation(self, table_name, operation, column):
+	def execute_operation(self, operation, column, from_table = None, where = None, group = None, having = None, **kargs):
 		return 1
+
+	def execute_query(self, select = None, from_table = None, where = None, distinct = False, group = None, limit = None, having = None, includes = [], joins = [], offset = None, order = None, uniq = False):
+		return []

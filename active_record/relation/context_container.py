@@ -5,7 +5,7 @@ Visit the project in http://code.google.com/p/python-project-utils/
 
 class ContextContainer(object):
 	def __init__(self):
-		_context = {}
+		self._context = {}
 
 	@property
 	def context(self):
