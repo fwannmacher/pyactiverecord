@@ -25,13 +25,9 @@ class IConnector(object):
 		"""Gets the table primary key from the database."""
 
 	@abc.abstractmethod
-	def table_record_exists(self, table_name, criteria):
-		"""Verifies if a record with the criteria exists in the table."""
-
-	@abc.abstractmethod
-	def get_table_records(self, table_name, criteria = None, limit = None, order_by = None, columns = None):
-		"""Verifies if a record with the criteria exists in the table."""
-
-	@abc.abstractmethod
-	def execute_table_operation(self, table_name, operation, column):
+	def execute_operation(self, operation, column, from_table = None, where = None, group = None, having = None, **kargs):
 		"""Executes the value for the operation over the given table column."""
+
+	@abc.abstractmethod
+	def execute_query(self, select = None, from_table = None, where = None, distinct = False, group = None, limit = None, having = None, includes = [], joins = [], offset = None, order = None, uniq = False):
+		"""Executes the query in the database."""
