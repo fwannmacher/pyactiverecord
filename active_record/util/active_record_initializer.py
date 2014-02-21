@@ -5,6 +5,7 @@ Visit the project in http://code.google.com/p/python-project-utils/
 
 import utilities.reflection.util
 from .. import connection
+from active_record_holder import ActiveRecordHolder
 import active_record.base
 
 class ActiveRecordInitializer:
@@ -21,3 +22,5 @@ class ActiveRecordInitializer:
 
 			for column_name, column_type in connector.get_table_columns(table_name).items():
 				utilities.reflection.util.PropertyAttacher.attach_property(cls, column_name, column_type)
+
+			ActiveRecordHolder.instance.add_active_record(cls)
