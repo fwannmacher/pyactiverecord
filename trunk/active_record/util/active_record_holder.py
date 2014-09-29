@@ -18,4 +18,6 @@ class ActiveRecordHolder(utilities.design_pattern.singleton.Singleton):
 		return self._active_records[table_name] if table_name in self._active_records else None
 
 	def get_active_record_by_name(self, name):
-		return self._active_records[name] if table_name in self._active_records else None
+		name = utilities.string.CaseConverter.convert_to_snake_case(name)
+
+		return self._active_records[name] if name in self._active_records else None
