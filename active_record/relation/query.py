@@ -7,32 +7,29 @@ import inspect
 import re
 import active_record.base
 from context_container import ContextContainer
+from context import Context
 
 class Query(ContextContainer):
 	order_pattern = re.compile(r"(\bASC\b|\bDESC\b)", re.IGNORECASE)
 
 	def __init__(self):
 		ContextContainer.__init__(self)
-		
-		self.context["includes"] = []
-		self.context["joins"] = []
-		self.context["where"] = []
 
 	def distinct(self, value = True):
-		self.context["distinct"] = value
+		self.context[Context.Scopes.DISTINCT] = value
 
 		return self
 
 	def from_table(self, value):
-		self.context["from_table"] = value
+		self.context[Context.Scopes.FROM] = value
 
 		return self
 
 	def group(self, *args):
 		for arg in args:
 			if type(arg) is str:
-				self._add_coma("group")
-				self.context["group"] += arg.strip()
+				self._add_coma(Context.Scopes.GROUP)
+				self.context[Context.Scopes.GROUP] += arg.strip()
 			elif type(arg) is list:
 				self.group(*arg)
 			else:
@@ -44,22 +41,22 @@ class Query(ContextContainer):
 		for value in values:
 			options = options.replace("?", str(value), 1)
 
-		self.context["having"] = options
+		self.context[Context.Scopes.HAVING] = options
 
 		return self
 
 	def includes(self, *args):
-		self._parse_arguments_to_list_scope(self.includes, *args)
+		self._parse_arguments_to_list_scope(self.includes, Context.Scopes.INCLUDES, *args)
 
 		return self
 
 	def joins(self, *args):
-		self._parse_arguments_to_list_scope(self.joins, *args)
+		self._parse_arguments_to_list_scope(self.joins, Context.Scopes.JOINS, *args)
 
 		return self
 
 	def limit(self, value):
-		self.context["limit"] = value
+		self.context[Context.Scopes.LIMIT] = value
 
 		return self
 
@@ -68,7 +65,7 @@ class Query(ContextContainer):
 		return []
 
 	def offset(self, value):
-		self.context["offset"] = value
+		self.context[Context.Scopes.OFFSET] = value
 
 		return self
 
@@ -99,8 +96,8 @@ class Query(ContextContainer):
 				self._raise_type_error(arg)
 
 			if len(value) > 0:
-				self._add_coma("order")
-				self.context["order"] += value
+				self._add_coma(Context.Scopes.ORDER)
+				self.context[Context.Scopes.ORDER] += value
 
 		if len(kargs) > 0:
 			self.order(kargs)
@@ -116,37 +113,35 @@ class Query(ContextContainer):
 	#	return self
 
 	def reorder(self, *args):
-		self.unescope("order")
+		self.unescope(Context.Scopes.ORDER)
 
 		return self.order(*args)
 
 	def reverse_order(self):
-		order_tokens = self.context["order"].split(",")
-		self.context["order"] = ""
+		order_tokens = self.context[Context.Scopes.ORDER].split(",")
+		self.context[Context.Scopes.ORDER] = ""
 
 		for token in order_tokens:
-			self._add_coma("order")
+			self._add_coma(Context.Scopes.ORDER)
 
 			if token.split(" ")[1].upper() == "ASC":
-				self.context["order"] += token[:-3] + "DESC"
+				self.context[Context.Scopes.ORDER] += token[:-3] + "DESC"
 			else:
-				self.context["order"] += token[:-4] + "ASC"
+				self.context[Context.Scopes.ORDER] += token[:-4] + "ASC"
 
 		return self
 
 	def select(self, *fields):
-		self.context["select"] = ""
+		self.context[Context.Scopes.SELECT] = ""
 
 		for field in fields:
-			self._add_coma("select")
-			self.context["select"] += field
+			self._add_coma(Context.Scopes.SELECT)
+			self.context[Context.Scopes.SELECT] += field
 
 		return self
 
 	def uniq(self, value = True):
-		self.context["uniq"] = value
-
-		return self
+		return self.distinct(value)
 
 	def unescope(self, *scopes):
 		for scope in scopes:
@@ -181,14 +176,14 @@ class Query(ContextContainer):
 
 				for key, value in options.items():
 					if len(option) > 0:
-						option += " and "
+						option += " AND "
 
-					operator = "in" if type(value) is list else "="
+					operator = "IN" if type(value) is list else "="
 					option += key + " " + operator + " " + self._convert_where_clause_value(value)
 			else:
 				self._raise_type_error(options)
 
-			self.context["where"].append(option)
+			self.context[Context.Scopes.WHERE].append(option)
 
 		if len(kargs) > 0:
 			self.where(kargs)
@@ -220,10 +215,10 @@ class Query(ContextContainer):
 		else:
 			return str(value)
 
-	def _parse_arguments_to_list_scope(self, method, *args):
+	def _parse_arguments_to_list_scope(self, method, scope, *args):
 		for arg in args:
 			if type(arg) is str or type(arg) is dict:
-				self.context[method.__name__].append(arg)
+				self.context[scope].append(arg)
 			elif type(arg) is list:
 				method.__call__(*arg)
 			else:
